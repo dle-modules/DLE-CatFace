@@ -2,31 +2,31 @@
 
 /*
 =============================================================================
- Файл: catface.php (backend) версия 2.3
+ Р¤Р°Р№Р»: catface.php (backend) РІРµСЂСЃРёСЏ 2.3
 -----------------------------------------------------------------------------
- Автор: Фомин Александр Алексеевич, mail@mithrandir.ru
+ РђРІС‚РѕСЂ: Р¤РѕРјРёРЅ РђР»РµРєСЃР°РЅРґСЂ РђР»РµРєСЃРµРµРІРёС‡, mail@mithrandir.ru
 -----------------------------------------------------------------------------
- Назначение: настройка SEO для категорий и главной страницы
+ РќР°Р·РЅР°С‡РµРЅРёРµ: РЅР°СЃС‚СЂРѕР№РєР° SEO РґР»СЏ РєР°С‚РµРіРѕСЂРёР№ Рё РіР»Р°РІРЅРѕР№ СЃС‚СЂР°РЅРёС†С‹
 =============================================================================
 */
 
-    // Антихакер
+    // РђРЅС‚РёС…Р°РєРµСЂ
     if( !defined( 'DATALIFEENGINE' ) OR !defined( 'LOGGED_IN' ) ) {
             die( "Hacking attempt!" );
     }
 
     /*
-     * Класс настройки SEO для категорий и главной страницы
+     * РљР»Р°СЃСЃ РЅР°СЃС‚СЂРѕР№РєРё SEO РґР»СЏ РєР°С‚РµРіРѕСЂРёР№ Рё РіР»Р°РІРЅРѕР№ СЃС‚СЂР°РЅРёС†С‹
      */
     class CategoryFaceAdmin
     {
         /*
-         * Конструктор класса CategoryFaceAdmin - задаёт значение свойства dle_api и editor
-         * @param $dle_api - объект класса DLE_API
+         * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєР»Р°СЃСЃР° CategoryFaceAdmin - Р·Р°РґР°С‘С‚ Р·РЅР°С‡РµРЅРёРµ СЃРІРѕР№СЃС‚РІР° dle_api Рё editor
+         * @param $dle_api - РѕР±СЉРµРєС‚ РєР»Р°СЃСЃР° DLE_API
          */
         public function __construct()
         {
-            // Подключаем DLE_API
+            // РџРѕРґРєР»СЋС‡Р°РµРј DLE_API
             global $db, $config;
             include ('engine/api/api.class.php');
             $this->dle_api = $dle_api;
@@ -34,37 +34,37 @@
 
 
         /*
-         * Главный метод класса CategoryFaceAdmin - в зависимости от запроса, вызывает те или иные действия
+         * Р“Р»Р°РІРЅС‹Р№ РјРµС‚РѕРґ РєР»Р°СЃСЃР° CategoryFaceAdmin - РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ Р·Р°РїСЂРѕСЃР°, РІС‹Р·С‹РІР°РµС‚ С‚Рµ РёР»Рё РёРЅС‹Рµ РґРµР№СЃС‚РІРёСЏ
          */
         public function run()
         {
-            // Ловим параметр action из запроса; по умолчанию action=list (список позиций)
+            // Р›РѕРІРёРј РїР°СЂР°РјРµС‚СЂ action РёР· Р·Р°РїСЂРѕСЃР°; РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ action=list (СЃРїРёСЃРѕРє РїРѕР·РёС†РёР№)
             $action = !empty($_REQUEST['action'])?$_REQUEST['action']:'list';
 
-            // В зависимости от параметра action, выполняем те или иные действия
+            // Р’ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РїР°СЂР°РјРµС‚СЂР° action, РІС‹РїРѕР»РЅСЏРµРј С‚Рµ РёР»Рё РёРЅС‹Рµ РґРµР№СЃС‚РІРёСЏ
             switch($action)
             {
-                // Просмотр списка позиций
+                // РџСЂРѕСЃРјРѕС‚СЂ СЃРїРёСЃРєР° РїРѕР·РёС†РёР№
                 case 'list':
                     $output = $this->actionList();
-                    $headerText = 'Список категорий';
+                    $headerText = 'РЎРїРёСЃРѕРє РєР°С‚РµРіРѕСЂРёР№';
                     break;
 
-                // Форма редактирования одной позици из списка
+                // Р¤РѕСЂРјР° СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РѕРґРЅРѕР№ РїРѕР·РёС†Рё РёР· СЃРїРёСЃРєР°
                 case 'form':
                     $output = $this->actionForm();
-                    $headerText = '<a href="?mod=catface"><< Вернуться к списку категорий</a>';
+                    $headerText = '<a href="?mod=catface"><< Р’РµСЂРЅСѓС‚СЊСЃСЏ Рє СЃРїРёСЃРєСѓ РєР°С‚РµРіРѕСЂРёР№</a>';
                     break;
 
-                // Созранение позиции
+                // РЎРѕР·СЂР°РЅРµРЅРёРµ РїРѕР·РёС†РёРё
                 case 'save':
                     $output = $this->actionSave();
-                    $headerText = 'Сохранение информации';
+                    $headerText = 'РЎРѕС…СЂР°РЅРµРЅРёРµ РёРЅС„РѕСЂРјР°С†РёРё';
                     break;
 
-                // Ошибка - не существующий action
+                // РћС€РёР±РєР° - РЅРµ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ action
                 default:
-                    $headerText = 'Ошибка! Запрошено неизвестное действие!';
+                    $headerText = 'РћС€РёР±РєР°! Р—Р°РїСЂРѕС€РµРЅРѕ РЅРµРёР·РІРµСЃС‚РЅРѕРµ РґРµР№СЃС‚РІРёРµ!';
                     break;
             }
 
@@ -73,7 +73,7 @@
 
 
         /*
-         * Метод генерирует список категорий и возвращает разметку для вывода
+         * РњРµС‚РѕРґ РіРµРЅРµСЂРёСЂСѓРµС‚ СЃРїРёСЃРѕРє РєР°С‚РµРіРѕСЂРёР№ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ СЂР°Р·РјРµС‚РєСѓ РґР»СЏ РІС‹РІРѕРґР°
          * @return string
          */
         public function actionList()
@@ -83,13 +83,13 @@
                 <tbody>
                     <tr>
                         <th>ID</th>
-                        <th>Категория</th>
-                        <th>Действие</th>
+                        <th>РљР°С‚РµРіРѕСЂРёСЏ</th>
+                        <th>Р”РµР№СЃС‚РІРёРµ</th>
                     </tr>
                     <tr class="list_item">
                         <td height="20"><strong>0</strong></td>
-                        <td height="20"><a href="?mod=catface&action=form&id=0">Главная страница</a></td>
-                        <td height="20">[<a href="?mod=catface&action=form&id=0">редактировать</a>]</td>
+                        <td height="20"><a href="?mod=catface&action=form&id=0">Р“Р»Р°РІРЅР°СЏ СЃС‚СЂР°РЅРёС†Р°</a></td>
+                        <td height="20">[<a href="?mod=catface&action=form&id=0">СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ</a>]</td>
                     </tr>
                     '.$this->createCatsTable().'
                 </tbody>
@@ -107,33 +107,33 @@
 
 
         /*
-         * Метод генерирует строки со всеми подкатегориями данной категории
-         * @param $parentId - идентификатор категории-родителя
-         * @param $subLevelMarker - строка для отступов подкатегорий
-         * @return string таблицу всех подкатегорий из указанной категории
+         * РњРµС‚РѕРґ РіРµРЅРµСЂРёСЂСѓРµС‚ СЃС‚СЂРѕРєРё СЃРѕ РІСЃРµРјРё РїРѕРґРєР°С‚РµРіРѕСЂРёСЏРјРё РґР°РЅРЅРѕР№ РєР°С‚РµРіРѕСЂРёРё
+         * @param $parentId - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РєР°С‚РµРіРѕСЂРёРё-СЂРѕРґРёС‚РµР»СЏ
+         * @param $subLevelMarker - СЃС‚СЂРѕРєР° РґР»СЏ РѕС‚СЃС‚СѓРїРѕРІ РїРѕРґРєР°С‚РµРіРѕСЂРёР№
+         * @return string С‚Р°Р±Р»РёС†Сѓ РІСЃРµС… РїРѕРґРєР°С‚РµРіРѕСЂРёР№ РёР· СѓРєР°Р·Р°РЅРЅРѕР№ РєР°С‚РµРіРѕСЂРёРё
          */
         public function createCatsTable($parentId = 0, $subLevelMarker = '')
         {
-            // Получаем список подкатегорий указанной категории
+            // РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє РїРѕРґРєР°С‚РµРіРѕСЂРёР№ СѓРєР°Р·Р°РЅРЅРѕР№ РєР°С‚РµРіРѕСЂРёРё
             $cats = $this->dle_api->load_table (PREFIX."_category", 'id, name', 'parentid = '.$parentId, true, 0, false, 'posi', 'ASC');
 
-            // В переменную $catsTable будем складывать строки в таблицу категорий для вывода
+            // Р’ РїРµСЂРµРјРµРЅРЅСѓСЋ $catsTable Р±СѓРґРµРј СЃРєР»Р°РґС‹РІР°С‚СЊ СЃС‚СЂРѕРєРё РІ С‚Р°Р±Р»РёС†Сѓ РєР°С‚РµРіРѕСЂРёР№ РґР»СЏ РІС‹РІРѕРґР°
             $catsTable = '';
 
-            // Если что-то найдено, перебираем все найденные категории
+            // Р•СЃР»Рё С‡С‚Рѕ-С‚Рѕ РЅР°Р№РґРµРЅРѕ, РїРµСЂРµР±РёСЂР°РµРј РІСЃРµ РЅР°Р№РґРµРЅРЅС‹Рµ РєР°С‚РµРіРѕСЂРёРё
             if($cats)
             {
                 foreach($cats as $cat)
                 {
-                    // Добавляем в таблицу текущую категорию
+                    // Р”РѕР±Р°РІР»СЏРµРј РІ С‚Р°Р±Р»РёС†Сѓ С‚РµРєСѓС‰СѓСЋ РєР°С‚РµРіРѕСЂРёСЋ
                     $catsTable .= '
                     <tr class="list_item">
                         <td height="20"><strong>'.$cat['id'].'</strong></td>
                         <td height="20">&nbsp;'.$subLevelMarker.'&nbsp;<a href="?mod=catface&action=form&id='.$cat['id'].'">'.$cat['name'].'</a></td>
-                        <td height="20">[<a href="?mod=catface&action=form&id='.$cat['id'].'">редактировать</a>] &nbsp; [<a href="?mod=categories&action=edit&catid='.$cat['id'].'">настроить</a>]</td>
+                        <td height="20">[<a href="?mod=catface&action=form&id='.$cat['id'].'">СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ</a>] &nbsp; [<a href="?mod=categories&action=edit&catid='.$cat['id'].'">РЅР°СЃС‚СЂРѕРёС‚СЊ</a>]</td>
                     </tr>';
 
-                    // Добавляем подкатегории
+                    // Р”РѕР±Р°РІР»СЏРµРј РїРѕРґРєР°С‚РµРіРѕСЂРёРё
                     $catsTable .= $this->createCatsTable($cat['id'], $subLevelMarker.'--');
                 }
             }
@@ -144,25 +144,25 @@
 
 
         /*
-         * Метод генерирует форму редактирования информаци
+         * РњРµС‚РѕРґ РіРµРЅРµСЂРёСЂСѓРµС‚ С„РѕСЂРјСѓ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РёРЅС„РѕСЂРјР°С†Рё
          * @return string
          */
         public function actionForm()
         {
-            // Подхватываем id категории из запроса
+            // РџРѕРґС…РІР°С‚С‹РІР°РµРј id РєР°С‚РµРіРѕСЂРёРё РёР· Р·Р°РїСЂРѕСЃР°
             $id = (int)$_REQUEST['id'];
 
-            // Ищем соответствующую запись в таблице category_face
+            // РС‰РµРј СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰СѓСЋ Р·Р°РїРёСЃСЊ РІ С‚Р°Р±Р»РёС†Рµ category_face
             $categoryFace = $this->dle_api->load_table (PREFIX."_category_face", '*', 'category_id = '.$id, false);
 
-            // Подхватываем глобальные переменные
+            // РџРѕРґС…РІР°С‚С‹РІР°РµРј РіР»РѕР±Р°Р»СЊРЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ
             global $lang, $config, $user_group, $member_id, $dle_login_hash;
 
-            // Подключаем парсер
+            // РџРѕРґРєР»СЋС‡Р°РµРј РїР°СЂСЃРµСЂ
             include_once ENGINE_DIR . '/classes/parse.class.php';
             $parse = new ParseFilter( Array (), Array (), 1, 1 );
 
-            // Подключаем редактор wysiwyg
+            // РџРѕРґРєР»СЋС‡Р°РµРј СЂРµРґР°РєС‚РѕСЂ wysiwyg
             if($this->dle_api->dle_config['allow_admin_wysiwyg'] && ($this->dle_api->dle_config['allow_admin_wysiwyg'] != "no") )
             {
                 $categoryFace['description'] = $parse->decodeBBCodes($categoryFace['description'], true, $this->dle_api->dle_config['allow_admin_wysiwyg']);
@@ -179,7 +179,7 @@
                 $editor_description_pages = ob_get_clean();
             }
 
-            // Подключаем редактор bbcode
+            // РџРѕРґРєР»СЋС‡Р°РµРј СЂРµРґР°РєС‚РѕСЂ bbcode
             else
             {
                 $categoryFace['description'] = $parse->decodeBBCodes($categoryFace['description'], false);
@@ -189,7 +189,7 @@
                 include (ENGINE_DIR . '/inc/include/inserttag.php');
 		$editor_description = '
                 <div class="form-group">
-                    <label class="control-label col-xs-2">Описание категории:</label>
+                    <label class="control-label col-xs-2">РћРїРёСЃР°РЅРёРµ РєР°С‚РµРіРѕСЂРёРё:</label>
                     <div class="col-xs-10">
 						'.$bb_code.'<textarea class="bk" style="width:100%;max-width:950px;height:300px;" name="description" id="description"  onclick=setFieldName(this.name)>'.$categoryFace['description'].'</textarea><script type=text/javascript>var selField  = "description";</script>
 					</div>
@@ -197,7 +197,7 @@
 
 		$editor_description_pages = '
                 <div id="description_pages_line" class="form-group">
-                    <label class="control-label col-xs-2">Описание для остальных страниц:</label>
+                    <label class="control-label col-xs-2">РћРїРёСЃР°РЅРёРµ РґР»СЏ РѕСЃС‚Р°Р»СЊРЅС‹С… СЃС‚СЂР°РЅРёС†:</label>
                     <div class="col-xs-10">
 						'.$bb_code.'<textarea class="bk" style="width:100%;max-width:950px;height:300px;" name="description_pages" id="description_pages"  onclick=setFieldName(this.name)>'.$categoryFace['description_pages'].'</textarea><script type=text/javascript>var selField  = "description_pages";</script>
 					</div>
@@ -208,57 +208,57 @@
             <form method="POST" action="?mod=catface&action=save" class="form-horizontal">
                 <div class="row box-section">
                         <div class="form-group">
-                            <label class="control-label col-xs-2">Где активировать модуль:</label>
+                            <label class="control-label col-xs-2">Р“РґРµ Р°РєС‚РёРІРёСЂРѕРІР°С‚СЊ РјРѕРґСѓР»СЊ:</label>
                             <div class="col-xs-3">
-                                <input id="module_placement_nowhere" type="radio" name="module_placement" value="nowhere"'.(($categoryFace['module_placement'] == 'nowhere')?' checked':'').'> <label for="module_placement_nowhere">нигде</label><br />
-                                <input id="module_placement_first_page" type="radio" name="module_placement" value="first_page"'.(($categoryFace['module_placement'] == 'first_page')?' checked':'').'> <label for="module_placement_first_page">на первой странице</label><br />
-                                <input id="module_placement_all_pages" type="radio" name="module_placement" value="all_pages"'.(($categoryFace['module_placement'] == 'all_pages')?' checked':'').'> <label for="module_placement_all_pages">на всех страницах</label>
+                                <input id="module_placement_nowhere" type="radio" name="module_placement" value="nowhere"'.(($categoryFace['module_placement'] == 'nowhere')?' checked':'').'> <label for="module_placement_nowhere">РЅРёРіРґРµ</label><br />
+                                <input id="module_placement_first_page" type="radio" name="module_placement" value="first_page"'.(($categoryFace['module_placement'] == 'first_page')?' checked':'').'> <label for="module_placement_first_page">РЅР° РїРµСЂРІРѕР№ СЃС‚СЂР°РЅРёС†Рµ</label><br />
+                                <input id="module_placement_all_pages" type="radio" name="module_placement" value="all_pages"'.(($categoryFace['module_placement'] == 'all_pages')?' checked':'').'> <label for="module_placement_all_pages">РЅР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С…</label>
 							</div>
 							<div class="col-xs-6 note large">
-								Данная опция позволяет скрыть на страницах категории не только название и описание, но и все остальное содержимое tpl-шаблона:<br />
-								<strong>Нигде</strong> - деактивация модуля в данной категории.<br />
-								<strong>На первой странице</strong> - модуль будет активирован на первой странице категории.<br />
-								<strong>На всех страницах</strong> - модуль будет отображаться на всех страницах категории.
+								Р”Р°РЅРЅР°СЏ РѕРїС†РёСЏ РїРѕР·РІРѕР»СЏРµС‚ СЃРєСЂС‹С‚СЊ РЅР° СЃС‚СЂР°РЅРёС†Р°С… РєР°С‚РµРіРѕСЂРёРё РЅРµ С‚РѕР»СЊРєРѕ РЅР°Р·РІР°РЅРёРµ Рё РѕРїРёСЃР°РЅРёРµ, РЅРѕ Рё РІСЃРµ РѕСЃС‚Р°Р»СЊРЅРѕРµ СЃРѕРґРµСЂР¶РёРјРѕРµ tpl-С€Р°Р±Р»РѕРЅР°:<br />
+								<strong>РќРёРіРґРµ</strong> - РґРµР°РєС‚РёРІР°С†РёСЏ РјРѕРґСѓР»СЏ РІ РґР°РЅРЅРѕР№ РєР°С‚РµРіРѕСЂРёРё.<br />
+								<strong>РќР° РїРµСЂРІРѕР№ СЃС‚СЂР°РЅРёС†Рµ</strong> - РјРѕРґСѓР»СЊ Р±СѓРґРµС‚ Р°РєС‚РёРІРёСЂРѕРІР°РЅ РЅР° РїРµСЂРІРѕР№ СЃС‚СЂР°РЅРёС†Рµ РєР°С‚РµРіРѕСЂРёРё.<br />
+								<strong>РќР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С…</strong> - РјРѕРґСѓР»СЊ Р±СѓРґРµС‚ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ РЅР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С… РєР°С‚РµРіРѕСЂРёРё.
                             </div>
                         </div>
 
 						<hr />
 
                         <div class="form-group">
-                            <label class="control-label col-xs-2">Отображать заголовок:</label>
+                            <label class="control-label col-xs-2">РћС‚РѕР±СЂР°Р¶Р°С‚СЊ Р·Р°РіРѕР»РѕРІРѕРє:</label>
                             <div class="col-xs-3">
-                                <input id="show_name_show" type="radio" name="show_name" value="show"'.(($categoryFace['show_name'] == 'show')?' checked':'').'> <label for="show_name_show">показывать</label><br />
-                                <input id="show_name_default" type="radio" name="show_name" value="default"'.(($categoryFace['show_name'] == 'default')?' checked':'').'> <label for="show_name_default">по умолчанию</label><br />
-                                <input id="show_name_hide" type="radio" name="show_name" value="hide"'.(($categoryFace['show_name'] == 'hide')?' checked':'').'> <label for="show_name_hide">скрывать</label>
+                                <input id="show_name_show" type="radio" name="show_name" value="show"'.(($categoryFace['show_name'] == 'show')?' checked':'').'> <label for="show_name_show">РїРѕРєР°Р·С‹РІР°С‚СЊ</label><br />
+                                <input id="show_name_default" type="radio" name="show_name" value="default"'.(($categoryFace['show_name'] == 'default')?' checked':'').'> <label for="show_name_default">РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</label><br />
+                                <input id="show_name_hide" type="radio" name="show_name" value="hide"'.(($categoryFace['show_name'] == 'hide')?' checked':'').'> <label for="show_name_hide">СЃРєСЂС‹РІР°С‚СЊ</label>
                             </div>
 							<div class="col-xs-6 note large">
-								<strong>Показывать</strong> - активирует заголовок, он будет отображаться в соответствии с заполненным полем выше.<br />
-								<strong>По умолчанию</strong> - использовать в качестве заголовка имя категории (не title), берется из глобальных настроек категории.<br />
-								<strong>Скрывать</strong> - Деактивирует заголовок, т.е. на странице он отображаться не будет.
+								<strong>РџРѕРєР°Р·С‹РІР°С‚СЊ</strong> - Р°РєС‚РёРІРёСЂСѓРµС‚ Р·Р°РіРѕР»РѕРІРѕРє, РѕРЅ Р±СѓРґРµС‚ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ Р·Р°РїРѕР»РЅРµРЅРЅС‹Рј РїРѕР»РµРј РІС‹С€Рµ.<br />
+								<strong>РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</strong> - РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІ РєР°С‡РµСЃС‚РІРµ Р·Р°РіРѕР»РѕРІРєР° РёРјСЏ РєР°С‚РµРіРѕСЂРёРё (РЅРµ title), Р±РµСЂРµС‚СЃСЏ РёР· РіР»РѕР±Р°Р»СЊРЅС‹С… РЅР°СЃС‚СЂРѕРµРє РєР°С‚РµРіРѕСЂРёРё.<br />
+								<strong>РЎРєСЂС‹РІР°С‚СЊ</strong> - Р”РµР°РєС‚РёРІРёСЂСѓРµС‚ Р·Р°РіРѕР»РѕРІРѕРє, С‚.Рµ. РЅР° СЃС‚СЂР°РЅРёС†Рµ РѕРЅ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ РЅРµ Р±СѓРґРµС‚.
 							</div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-xs-2">Заголовок категории:</label>
+                            <label class="control-label col-xs-2">Р—Р°РіРѕР»РѕРІРѕРє РєР°С‚РµРіРѕСЂРёРё:</label>
                             <div class="col-xs-10">
 								<input type="text" value="'.$categoryFace['name'].'" class="edit bk" style="width:98%;" size="25" name="name">
 							</div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-xs-2">Где отображать заголовок:</label>
+                            <label class="control-label col-xs-2">Р“РґРµ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊ Р·Р°РіРѕР»РѕРІРѕРє:</label>
                             <div class="col-xs-3">
-                                <input id="name_placement_first_page" type="radio" name="name_placement" value="first_page"'.(($categoryFace['name_placement'] == 'first_page')?' checked':'').'> <label for="name_placement_first_page">на первой странице</label><br />
-                                <input id="name_placement_all_pages" type="radio" name="name_placement" value="all_pages"'.(($categoryFace['name_placement'] == 'all_pages')?' checked':'').'> <label for="name_placement_all_pages">на всех страницах</label>							
+                                <input id="name_placement_first_page" type="radio" name="name_placement" value="first_page"'.(($categoryFace['name_placement'] == 'first_page')?' checked':'').'> <label for="name_placement_first_page">РЅР° РїРµСЂРІРѕР№ СЃС‚СЂР°РЅРёС†Рµ</label><br />
+                                <input id="name_placement_all_pages" type="radio" name="name_placement" value="all_pages"'.(($categoryFace['name_placement'] == 'all_pages')?' checked':'').'> <label for="name_placement_all_pages">РЅР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С…</label>							
                             </div>
 							<div class="col-xs-6 note large">
-								<strong>На первой странице</strong> - заголовок будет отображаться только на главной странице категории.<br />
-								<strong>На всех страницах</strong> - сквозной заголовок, т.е. будет отображаться на всех страницах категории.
+								<strong>РќР° РїРµСЂРІРѕР№ СЃС‚СЂР°РЅРёС†Рµ</strong> - Р·Р°РіРѕР»РѕРІРѕРє Р±СѓРґРµС‚ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ С‚РѕР»СЊРєРѕ РЅР° РіР»Р°РІРЅРѕР№ СЃС‚СЂР°РЅРёС†Рµ РєР°С‚РµРіРѕСЂРёРё.<br />
+								<strong>РќР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С…</strong> - СЃРєРІРѕР·РЅРѕР№ Р·Р°РіРѕР»РѕРІРѕРє, С‚.Рµ. Р±СѓРґРµС‚ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ РЅР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С… РєР°С‚РµРіРѕСЂРёРё.
                             </div>
                         </div>
                         <div id="name_pages_separator"></div>
                         <div id="name_pages_line" class="form-group">
-                            <label class="control-label col-xs-2">Заголовок для остальных страниц:</label>
+                            <label class="control-label col-xs-2">Р—Р°РіРѕР»РѕРІРѕРє РґР»СЏ РѕСЃС‚Р°Р»СЊРЅС‹С… СЃС‚СЂР°РЅРёС†:</label>
                             <div class="col-xs-10">
 								<input type="text" value="'.$categoryFace['name_pages'].'" class="edit bk" style="width:98%;" size="25" name="name_pages">
 							</div>
@@ -267,30 +267,30 @@
 						<hr />
 
                         <div class="form-group">
-                            <label class="control-label col-xs-2">Отображать описание:</label>
+                            <label class="control-label col-xs-2">РћС‚РѕР±СЂР°Р¶Р°С‚СЊ РѕРїРёСЃР°РЅРёРµ:</label>
                             <div class="col-xs-3">
-                                <input id="show_description_show" type="radio" name="show_description" value="show"'.(($categoryFace['show_description'] == 'show')?' checked':'').'> <label for="show_description_show">показывать</label><br />
-                                <input id="show_description_default" type="radio" name="show_description" value="default"'.(($categoryFace['show_description'] == 'default')?' checked':'').'> <label for="show_description_default">по умолчанию</label><br />
-                                <input id="show_description_hide" type="radio" name="show_description" value="hide"'.(($categoryFace['show_description'] == 'hide')?' checked':'').'> <label for="show_description_hide">скрывать</label>
+                                <input id="show_description_show" type="radio" name="show_description" value="show"'.(($categoryFace['show_description'] == 'show')?' checked':'').'> <label for="show_description_show">РїРѕРєР°Р·С‹РІР°С‚СЊ</label><br />
+                                <input id="show_description_default" type="radio" name="show_description" value="default"'.(($categoryFace['show_description'] == 'default')?' checked':'').'> <label for="show_description_default">РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</label><br />
+                                <input id="show_description_hide" type="radio" name="show_description" value="hide"'.(($categoryFace['show_description'] == 'hide')?' checked':'').'> <label for="show_description_hide">СЃРєСЂС‹РІР°С‚СЊ</label>
                             </div>
 							<div class="col-xs-6 note large">
-								<strong>Показывать</strong> - активирует описание, оно будет браться из текстового поля выше.<br />
-								<strong>По умолчанию</strong> - использовать в качестве описания meta-тег description категории (не title), берется из глобальных настроек категории.<br />
-								<strong>Cкрывать</strong> - деактивирует описание, т.е. на странице оно отображаться не будет.
+								<strong>РџРѕРєР°Р·С‹РІР°С‚СЊ</strong> - Р°РєС‚РёРІРёСЂСѓРµС‚ РѕРїРёСЃР°РЅРёРµ, РѕРЅРѕ Р±СѓРґРµС‚ Р±СЂР°С‚СЊСЃСЏ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ РїРѕР»СЏ РІС‹С€Рµ.<br />
+								<strong>РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</strong> - РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІ РєР°С‡РµСЃС‚РІРµ РѕРїРёСЃР°РЅРёСЏ meta-С‚РµРі description РєР°С‚РµРіРѕСЂРёРё (РЅРµ title), Р±РµСЂРµС‚СЃСЏ РёР· РіР»РѕР±Р°Р»СЊРЅС‹С… РЅР°СЃС‚СЂРѕРµРє РєР°С‚РµРіРѕСЂРёРё.<br />
+								<strong>CРєСЂС‹РІР°С‚СЊ</strong> - РґРµР°РєС‚РёРІРёСЂСѓРµС‚ РѕРїРёСЃР°РЅРёРµ, С‚.Рµ. РЅР° СЃС‚СЂР°РЅРёС†Рµ РѕРЅРѕ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ РЅРµ Р±СѓРґРµС‚.
                             </div>
                         </div>
 
                         '.$editor_description.'
 
                         <div class="form-group">
-                            <label class="control-label col-xs-2">Где отображать описание:</label>
+                            <label class="control-label col-xs-2">Р“РґРµ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊ РѕРїРёСЃР°РЅРёРµ:</label>
                             <div class="col-xs-3">
-                                <input id="description_placement_first_page" type="radio" name="description_placement" value="first_page"'.(($categoryFace['description_placement'] == 'first_page')?' checked':'').'> <label for="description_placement_first_page">на первой странице</label><br />
-                                <input id="description_placement_all_pages" type="radio" name="description_placement" value="all_pages"'.(($categoryFace['description_placement'] == 'all_pages')?' checked':'').'> <label for="description_placement_all_pages">на всех страницах</label>
+                                <input id="description_placement_first_page" type="radio" name="description_placement" value="first_page"'.(($categoryFace['description_placement'] == 'first_page')?' checked':'').'> <label for="description_placement_first_page">РЅР° РїРµСЂРІРѕР№ СЃС‚СЂР°РЅРёС†Рµ</label><br />
+                                <input id="description_placement_all_pages" type="radio" name="description_placement" value="all_pages"'.(($categoryFace['description_placement'] == 'all_pages')?' checked':'').'> <label for="description_placement_all_pages">РЅР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С…</label>
                             </div>
 							<div class="col-xs-6 note large">
-								<strong>На первой странице</strong> - описание будет отображаться только на главной странице категории.<br />
-								<strong>На всех страницах</strong> - сквозное описание, т.е. будет отображаться на всех страницах категории.
+								<strong>РќР° РїРµСЂРІРѕР№ СЃС‚СЂР°РЅРёС†Рµ</strong> - РѕРїРёСЃР°РЅРёРµ Р±СѓРґРµС‚ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ С‚РѕР»СЊРєРѕ РЅР° РіР»Р°РІРЅРѕР№ СЃС‚СЂР°РЅРёС†Рµ РєР°С‚РµРіРѕСЂРёРё.<br />
+								<strong>РќР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С…</strong> - СЃРєРІРѕР·РЅРѕРµ РѕРїРёСЃР°РЅРёРµ, С‚.Рµ. Р±СѓРґРµС‚ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ РЅР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С… РєР°С‚РµРіРѕСЂРёРё.
                             </div>
                         </div>
 
@@ -298,7 +298,7 @@
                         '.$editor_description_pages.'
                 </div>
 
-				<div style="text-align:center;padding:15px;"><input type="submit" class="btn btn-lg btn-green" value="Сохранить"></div>
+				<div style="text-align:center;padding:15px;"><input type="submit" class="btn btn-lg btn-green" value="РЎРѕС…СЂР°РЅРёС‚СЊ"></div>
 
                 <input type="hidden" name="user_hash" value="'.$dle_login_hash.'" />
                 <input type="hidden" name="id" value="'.$id.'" />
@@ -339,31 +339,31 @@
 
 
         /*
-         * Метод сохраняет SEO - информацию категории в таблицу category_face
+         * РњРµС‚РѕРґ СЃРѕС…СЂР°РЅСЏРµС‚ SEO - РёРЅС„РѕСЂРјР°С†РёСЋ РєР°С‚РµРіРѕСЂРёРё РІ С‚Р°Р±Р»РёС†Сѓ category_face
          * @return string
          */
         public function actionSave()
         {
-            // Подхватываем глобальные переменные
+            // РџРѕРґС…РІР°С‚С‹РІР°РµРј РіР»РѕР±Р°Р»СЊРЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ
             global $dle_login_hash, $user_group, $member_id, $config;
 
-            // Проверка ключа
+            // РџСЂРѕРІРµСЂРєР° РєР»СЋС‡Р°
             if( $_REQUEST['user_hash'] == "" or $_REQUEST['user_hash'] != $dle_login_hash )
             {
                 die( "Hacking attempt! User not found" );
             }
 
-            // Проверяем наличие id категории
+            // РџСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ id РєР°С‚РµРіРѕСЂРёРё
             if($_POST['id'] == '')
             {
-                die('Категория не найдена!');
+                die('РљР°С‚РµРіРѕСЂРёСЏ РЅРµ РЅР°Р№РґРµРЅР°!');
             }
 
-            // Подключаем класс парсера
+            // РџРѕРґРєР»СЋС‡Р°РµРј РєР»Р°СЃСЃ РїР°СЂСЃРµСЂР°
             include_once ENGINE_DIR . '/classes/parse.class.php';
             $parse = new ParseFilter( Array (), Array (), 1, 1 );
 
-            // Подхватываем данные из формы
+            // РџРѕРґС…РІР°С‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ РёР· С„РѕСЂРјС‹
             $id = $_POST['id'];
             $name = !empty($_POST['name'])?$_POST['name']:'';
             $name_pages = !empty($_POST['name_pages'])?$_POST['name_pages']:'';
@@ -375,7 +375,7 @@
             $show_description = !empty($_POST['show_description'])?$_POST['show_description']:'show';
             $description_placement = !empty($_POST['description_placement'])?$_POST['description_placement']:'first_page';
 
-            // Обрабатываем данные из формы
+            // РћР±СЂР°Р±Р°С‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ РёР· С„РѕСЂРјС‹
             $id = intval($id);
             // $name = $this->dle_api->db->safesql($parse->process(trim(htmlspecialchars($name))));
             $name = $this->dle_api->db->safesql ($parse->process (trim (htmlspecialchars ($name, ENT_COMPAT, $config['charset']))));
@@ -387,7 +387,7 @@
             $show_description = $this->dle_api->db->safesql($parse->process(trim(htmlspecialchars($show_description))));
             $description_placement = $this->dle_api->db->safesql($parse->process(trim(htmlspecialchars($description_placement))));
 
-            // Обрабатываем текст описания
+            // РћР±СЂР°Р±Р°С‚С‹РІР°РµРј С‚РµРєСЃС‚ РѕРїРёСЃР°РЅРёСЏ
             if (!$user_group[$member_id['user_group']]['allow_html'] )
             {
 		$description = strip_tags($description);
@@ -412,16 +412,16 @@
                 $description_pages = $this->dle_api->db->safesql($parse->BB_Parse($description_pages, false));
             }
 
-            // Ошибка в случае, если что-то не прошло проверку
+            // РћС€РёР±РєР° РІ СЃР»СѓС‡Р°Рµ, РµСЃР»Рё С‡С‚Рѕ-С‚Рѕ РЅРµ РїСЂРѕС€Р»Рѕ РїСЂРѕРІРµСЂРєСѓ
             if($parse->not_allowed_text)
             {
-		msg( "error", 'Ошибка при сохранении', 'Недопустимые символы', "javascript:history.go(-1)" );
+		msg( "error", 'РћС€РёР±РєР° РїСЂРё СЃРѕС…СЂР°РЅРµРЅРёРё', 'РќРµРґРѕРїСѓСЃС‚РёРјС‹Рµ СЃРёРјРІРѕР»С‹', "javascript:history.go(-1)" );
             }
 
-            // Определяем, существует ли соответствующая запись в таблице category_face
+            // РћРїСЂРµРґРµР»СЏРµРј, СЃСѓС‰РµСЃС‚РІСѓРµС‚ Р»Рё СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰Р°СЏ Р·Р°РїРёСЃСЊ РІ С‚Р°Р±Р»РёС†Рµ category_face
             $categoryFace = $this->dle_api->load_table (PREFIX."_category_face", 'category_id', 'category_id = '.$id, false);
 
-            // Если запись уже существовала, обновляем её
+            // Р•СЃР»Рё Р·Р°РїРёСЃСЊ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІРѕРІР°Р»Р°, РѕР±РЅРѕРІР»СЏРµРј РµС‘
             if(!empty($categoryFace))
             {
                 $this->dle_api->db->query(
@@ -439,7 +439,7 @@
                 );
             }
 
-            // Если записи не существовало, добавляем её
+            // Р•СЃР»Рё Р·Р°РїРёСЃРё РЅРµ СЃСѓС‰РµСЃС‚РІРѕРІР°Р»Рѕ, РґРѕР±Р°РІР»СЏРµРј РµС‘
             else
             {
                 $this->dle_api->db->query(
@@ -449,20 +449,20 @@
                 );
             }
 
-            // Выводим сообщение об успешном добавлении
-            msg("info", 'Информация о категории успешно сохранена!', 'Информация о категории успешно сохранена!', '?mod=catface');
+            // Р’С‹РІРѕРґРёРј СЃРѕРѕР±С‰РµРЅРёРµ РѕР± СѓСЃРїРµС€РЅРѕРј РґРѕР±Р°РІР»РµРЅРёРё
+            msg("info", 'РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РєР°С‚РµРіРѕСЂРёРё СѓСЃРїРµС€РЅРѕ СЃРѕС…СЂР°РЅРµРЅР°!', 'РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РєР°С‚РµРіРѕСЂРёРё СѓСЃРїРµС€РЅРѕ СЃРѕС…СЂР°РЅРµРЅР°!', '?mod=catface');
         }
 
 
         /*
-         * Метод выводит интерфейс в браузер
-         * @param $headerText - текст заголовка страницы
-         * @param $output - содержит отформатированный контент для вывода в браузер
+         * РњРµС‚РѕРґ РІС‹РІРѕРґРёС‚ РёРЅС‚РµСЂС„РµР№СЃ РІ Р±СЂР°СѓР·РµСЂ
+         * @param $headerText - С‚РµРєСЃС‚ Р·Р°РіРѕР»РѕРІРєР° СЃС‚СЂР°РЅРёС†С‹
+         * @param $output - СЃРѕРґРµСЂР¶РёС‚ РѕС‚С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРЅС‹Р№ РєРѕРЅС‚РµРЅС‚ РґР»СЏ РІС‹РІРѕРґР° РІ Р±СЂР°СѓР·РµСЂ
          */
         public function showOutput($headerText, $output)
         {
-            // Отображение шапки админского интерфейса
-            echoheader('CatFace', 'Модуль SEO-оптимизации категорий');
+            // РћС‚РѕР±СЂР°Р¶РµРЅРёРµ С€Р°РїРєРё Р°РґРјРёРЅСЃРєРѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃР°
+            echoheader('CatFace', 'РњРѕРґСѓР»СЊ SEO-РѕРїС‚РёРјРёР·Р°С†РёРё РєР°С‚РµРіРѕСЂРёР№');
             echo '
 
 '.($config['version_id'] >= 10.2 ? '<style>.uniform, div.selector {min-width: 250px;}</style>' : '<style>
@@ -483,7 +483,7 @@ font-size: 12px;
 -o-border-radius: 0;
 border-radius: 0;
 background: whitesmoke;
-background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgi…pZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==");
+background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiвЂ¦pZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==");
 background-size: 100%;
 background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #f5f5f5));
 background-image: -webkit-linear-gradient(top, #ffffff, #f5f5f5);
@@ -506,7 +506,7 @@ color: #666;
 		<div class="title">'.$headerText.'</div>
 		<ul class="box-toolbar">
 			<li class="toolbar-link">
-			<a target="_blank" href="http://alaev.info/blog/post/2086?from=CatFaceAdmin">CatFace v.2.3 © 2014 Блог АлаичЪ\'а - разработка и поддержка модуля</a>
+			<a target="_blank" href="http://alaev.info/blog/post/2086?from=CatFaceAdmin">CatFace v.2.3 В© 2014 Р‘Р»РѕРі РђР»Р°РёС‡РЄ\'Р° - СЂР°Р·СЂР°Р±РѕС‚РєР° Рё РїРѕРґРґРµСЂР¶РєР° РјРѕРґСѓР»СЏ</a>
 			</li>
 		</ul>
 	</div>
@@ -518,16 +518,16 @@ color: #666;
 
             ';
 
-            // Отображение подвала админского интерфейса
+            // РћС‚РѕР±СЂР°Р¶РµРЅРёРµ РїРѕРґРІР°Р»Р° Р°РґРјРёРЅСЃРєРѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃР°
             echofooter();
         }
     }
     /*---End Of CategoryFaceAdmin Class---*/
 
-    // Создаём объект класса CategoryFaceAdmin
+    // РЎРѕР·РґР°С‘Рј РѕР±СЉРµРєС‚ РєР»Р°СЃСЃР° CategoryFaceAdmin
     $CategoryFaceAdmin = new CategoryFaceAdmin;
 
-    // Запускаем главный метод класса
+    // Р—Р°РїСѓСЃРєР°РµРј РіР»Р°РІРЅС‹Р№ РјРµС‚РѕРґ РєР»Р°СЃСЃР°
     $CategoryFaceAdmin->run();
 
 ?>

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>Удаление модуля CatFace</title>
+        <title>РЈРґР°Р»РµРЅРёРµ РјРѕРґСѓР»СЏ CatFace</title>
         <link rel="stylesheet" type="text/css" href="http://store.alaev.info/style.css" />
         <style type="text/css">
             #header {width: 100%; text-align: center;}
@@ -36,60 +36,60 @@
 
     function module_uninstaller()
     {
-        // Стандартный текст
-        $output = '<h2>Добро пожаловать в скрипт для удаления модуля CatFace!</h2>';
-        $output .= '<p><strong>Внимание!</strong> После удаления модуля <strong>обязательно</strong> удалите файл <strong>catface_uninstaller.php</strong> с Вашего сервера!</p>';
+        // РЎС‚Р°РЅРґР°СЂС‚РЅС‹Р№ С‚РµРєСЃС‚
+        $output = '<h2>Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ РІ СЃРєСЂРёРїС‚ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ РјРѕРґСѓР»СЏ CatFace!</h2>';
+        $output .= '<p><strong>Р’РЅРёРјР°РЅРёРµ!</strong> РџРѕСЃР»Рµ СѓРґР°Р»РµРЅРёСЏ РјРѕРґСѓР»СЏ <strong>РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ</strong> СѓРґР°Р»РёС‚Рµ С„Р°Р№Р» <strong>catface_uninstaller.php</strong> СЃ Р’Р°С€РµРіРѕ СЃРµСЂРІРµСЂР°!</p>';
         $output .= '<p>';
-        $output .= '<strong>Кроме того, необходимо удалить следующие файлы:</strong>';
+        $output .= '<strong>РљСЂРѕРјРµ С‚РѕРіРѕ, РЅРµРѕР±С…РѕРґРёРјРѕ СѓРґР°Р»РёС‚СЊ СЃР»РµРґСѓСЋС‰РёРµ С„Р°Р№Р»С‹:</strong>';
         $output .= '<ul>';
             $output .= '<li>/engine/modules/<strong>catface.php</strong></li>';
             $output .= '<li>/engine/inc/<strong>catface.php</strong></li>';
             $output .= '<li>/engine/editor/<strong>catface_description.php</strong></li>';
             $output .= '<li>/engine/editor/<strong>catface_description_pages.php</strong></li>';
             $output .= '<li>/engine/skins/images/<strong>catface.png</strong></li>';
-            $output .= '<li>/templates/<em>Имя Вашего Шаблона</em>/<strong>catface.tpl</strong></li>';
+            $output .= '<li>/templates/<em>РРјСЏ Р’Р°С€РµРіРѕ РЁР°Р±Р»РѕРЅР°</em>/<strong>catface.tpl</strong></li>';
         $output .= '</ul>';
         $output .= '</p>';
 
-        // Если через $_POST передаётся параметр catface_uninstall, производим инсталляцию, согласно параметрам
+        // Р•СЃР»Рё С‡РµСЂРµР· $_POST РїРµСЂРµРґР°С‘С‚СЃСЏ РїР°СЂР°РјРµС‚СЂ catface_uninstall, РїСЂРѕРёР·РІРѕРґРёРј РёРЅСЃС‚Р°Р»Р»СЏС†РёСЋ, СЃРѕРіР»Р°СЃРЅРѕ РїР°СЂР°РјРµС‚СЂР°Рј
         if(!empty($_POST['catface_uninstall']))
         {
-            // Подключаем config
+            // РџРѕРґРєР»СЋС‡Р°РµРј config
             include_once ('engine/data/config.php');
 
-            // Подключаем DLE API
+            // РџРѕРґРєР»СЋС‡Р°РµРј DLE API
             include ('engine/api/api.class.php');
             
-            // Удаление таблицы category_face
+            // РЈРґР°Р»РµРЅРёРµ С‚Р°Р±Р»РёС†С‹ category_face
             $query = "DROP TABLE IF EXISTS `".PREFIX."_category_face`;";
             $dle_api->db->query($query);
 
-            // Удаляем модуль из админки
+            // РЈРґР°Р»СЏРµРј РјРѕРґСѓР»СЊ РёР· Р°РґРјРёРЅРєРё
             $dle_api->uninstall_admin_module('catface');
 
-            // Вывод
+            // Р’С‹РІРѕРґ
             $output .= '<p>';
-            $output .= 'Модуль успешно удалён!';
+            $output .= 'РњРѕРґСѓР»СЊ СѓСЃРїРµС€РЅРѕ СѓРґР°Р»С‘РЅ!';
             $output .= '</p>';
         }
 
-        // Если через $_POST ничего не передаётся, выводим форму для удаления модуля
+        // Р•СЃР»Рё С‡РµСЂРµР· $_POST РЅРёС‡РµРіРѕ РЅРµ РїРµСЂРµРґР°С‘С‚СЃСЏ, РІС‹РІРѕРґРёРј С„РѕСЂРјСѓ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ РјРѕРґСѓР»СЏ
         else
         {
-            // Вывод
+            // Р’С‹РІРѕРґ
             $output .= '<p>';
             $output .= '<form method="POST" action="catface_uninstaller.php">';
             $output .= '<input type="hidden" name="catface_uninstall" value="1" />';
-            $output .= '<input type="submit" value="Удалить модуль" />';
+            $output .= '<input type="submit" value="РЈРґР°Р»РёС‚СЊ РјРѕРґСѓР»СЊ" />';
             $output .= '</form>';
             $output .= '</p>';
         }
         
         $output .= '<p>';
-        $output .= '<a href="http://alaev.info/blog/post/2086?from=CatFaceUninstaller">разработка и поддержка модуля</a>';
+        $output .= '<a href="http://alaev.info/blog/post/2086?from=CatFaceUninstaller">СЂР°Р·СЂР°Р±РѕС‚РєР° Рё РїРѕРґРґРµСЂР¶РєР° РјРѕРґСѓР»СЏ</a>';
         $output .= '</p>';
 
-        // Функция возвращает то, что должно быть выведено
+        // Р¤СѓРЅРєС†РёСЏ РІРѕР·РІСЂР°С‰Р°РµС‚ С‚Рѕ, С‡С‚Рѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІС‹РІРµРґРµРЅРѕ
         return $output;
     }
 
