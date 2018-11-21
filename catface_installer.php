@@ -58,8 +58,8 @@
             // Cоздание таблицы для модуля
             $query = "CREATE TABLE `".PREFIX."_category_face` (
                           `category_id` int(11) NOT NULL,
-                          `name` varchar(255) NOT NULL,
-                          `name_pages` varchar(255) NOT NULL,
+                          `name` varchar(150) NOT NULL,
+                          `name_pages` text NOT NULL,
                           `description` text NOT NULL,
                           `description_pages` text NOT NULL,
                           `module_placement` enum('nowhere','first_page','all_pages') NOT NULL,
@@ -91,7 +91,7 @@
             $output .= '</form>';
             $output .= '</p>';
         }
-        
+
         $output .= '<p>';
         $output .= '<a href="http://alaev.info/blog/post/2086?from=CatFaceInstaller">разработка и поддержка модуля</a>';
         $output .= '</p>';
