@@ -7,11 +7,11 @@
 -----------------------------------------------------
  Copyright (c) 2004,2011 SoftNews Media Group
 =====================================================
- Данный код защищен авторскими правами
+ Р”Р°РЅРЅС‹Р№ РєРѕРґ Р·Р°С‰РёС‰РµРЅ Р°РІС‚РѕСЂСЃРєРёРјРё РїСЂР°РІР°РјРё
 =====================================================
- Файл: catface.php
+ Р¤Р°Р№Р»: catface.php
 -----------------------------------------------------
- Назначение: WYSIWYG для админпанели
+ РќР°Р·РЅР°С‡РµРЅРёРµ: WYSIWYG РґР»СЏ Р°РґРјРёРЅРїР°РЅРµР»Рё
 =====================================================
 */
 
@@ -25,7 +25,7 @@ if($config['version_id'] < 9.6)
 {
 echo <<<HTML
 <div class="form-group">
-	<label class="control-label col-xs-2">Описание категории:</label>
+	<label class="control-label col-xs-2">РћРїРёСЃР°РЅРёРµ РєР°С‚РµРіРѕСЂРёРё:</label>
 	<div class="col-xs-10">
 <script type="text/javascript" src="engine/editor/jscripts/tiny_mce/jquery.tinymce.js"></script>
 <script type="text/javascript">
@@ -172,7 +172,7 @@ else
 
 echo <<<HTML
 <div class="form-group">
-	<label class="control-label col-xs-2">Описание категории:</label>
+	<label class="control-label col-xs-2">РћРїРёСЃР°РЅРёРµ РєР°С‚РµРіРѕСЂРёРё:</label>
 	<div class="col-xs-10">
 <script type="text/javascript" src="engine/editor/scripts/language/{$lang['wysiwyg_language']}/editor_lang.js"></script>
 <script type="text/javascript" src="engine/editor/scripts/innovaeditor.js"></script>
